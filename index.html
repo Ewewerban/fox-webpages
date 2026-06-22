@@ -12,6 +12,8 @@
             --text-dark: #222222;
             --text-muted: #666666;
             --border: #E0E0E0;
+            --danger: #DC3545;
+            --danger-hover: #C82333;
         }
 
         * { 
@@ -125,11 +127,20 @@
         .btn-secondary { 
             background-color: #222222; 
             color: white; 
-            margin-top: 10px; 
         }
         
         .btn-secondary:hover {
             background-color: #444444;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
         }
 
         .container { 
@@ -256,7 +267,7 @@
             border-color: var(--primary);
         }
         
-        /* Sekcja Panelu Admina (Czysty biały styl) */
+        /* Sekcja Panelu Admina */
         #admin-panel { 
             background-color: var(--bg-white); 
             color: var(--text-dark); 
@@ -269,7 +280,7 @@
         
         #admin-panel h3 { 
             color: var(--primary); 
-            margin-bottom: 10px; 
+            margin-bottom: 5px; 
             font-size: 24px;
         }
         
@@ -285,12 +296,16 @@
             padding: 20px; 
             border: 1px solid var(--border); 
             border-radius: 6px; 
+            position: relative;
         }
         
         .admin-box h4 {
             margin-bottom: 15px;
             border-bottom: 1px solid var(--border);
             padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .admin-box label {
@@ -314,6 +329,14 @@
         .admin-box input:focus, .admin-box textarea:focus {
             border-color: var(--primary);
             outline: none;
+        }
+
+        .admin-footer-box {
+            background: #FDFDFD;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
         }
 
         footer { 
@@ -393,10 +416,19 @@
 
         <section id="admin-panel">
             <h3>🦊 Panel Administratora Fox Webpages</h3>
-            <p style="color: var(--text-muted); font-size: 14px;">Wprowadź zmiany w polach poniżej, aby zaktualizować ofertę. Następnie pobierz nowy plik i zaktualizuj go na GitHubie.</p>
+            <p style="color: var(--text-muted); font-size: 14px;">Zarządzaj swoją ofertą i stopką. Po zakończeniu kliknij "Zastosuj", a potem pobierz gotowy plik na GitHuba.</p>
             
-            <div id="admin-editor-container" class="admin-grid">
-                </div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="addNewPackage()" style="padding: 8px 20px; font-size: 14px;">➕ Dodaj nowy pakiet</button>
+            </div>
+
+            <div id="admin-editor-container" class="admin-grid"></div>
+            
+            <div class="admin-footer-box">
+                <h4>📝 Edycja treści stopki strony</h4>
+                <label>Treść stopki (Możesz używać tagów HTML, np. &amp;copy; lub &lt;span&gt;):</label>
+                <textarea id="edit-footer-text" rows="2"></textarea>
+            </div>
             
             <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
                 <button class="btn" onclick="saveAdminChanges()">1. Zastosuj zmiany w podglądzie</button>
@@ -406,12 +438,16 @@
 
     </div>
 
-    <footer>
-        <p>&copy; 2026 <span onclick="askAdmin()">Fox Webpages</span>. Wszelkie prawa zastrzeżone.</p>
-    </footer>
+    <footer id="page-footer">
+        </footer>
 
     <script>
-        // Dane katalogu - edytowalne w kodzie lub przez panel admina
+        // BAZA STOPKI
+        let footerData = {
+            text: "&copy; 2026 <span onclick='askAdmin()'>Fox Webpages</span>. Wszelkie prawa zastrzeżone."
+        };
+
+        // BAZA PAKIETÓW
         let servicesData = [
             {
                 id: "wizytowka",
@@ -439,19 +475,22 @@
             }
         ];
 
-        // Funkcja renderująca elementy interfejsu użytkownika
+        // RENDEROWANIE INTERFEJSU
         function renderPage() {
             const catalogContainer = document.getElementById('catalog-container');
             const selectContainer = document.getElementById('category');
+            const footerContainer = document.getElementById('page-footer');
             
             catalogContainer.innerHTML = '';
             selectContainer.innerHTML = '<option value="" disabled selected>-- Wybierz z katalogu --</option>';
 
+            // Render stopki
+            footerContainer.innerHTML = `<p>${footerData.text}</p>`;
+
+            // Render katalogu i opcji select
             servicesData.forEach(service => {
-                // Budowanie listy zalet
                 let featureList = service.features.split(',').map(f => `<li>${f.trim()}</li>`).join('');
                 
-                // Wstrzykiwanie kart
                 catalogContainer.innerHTML += `
                     <div class="card">
                         <div>
@@ -467,7 +506,6 @@
                     </div>
                 `;
 
-                // Wstrzykiwanie opcji do pola select
                 selectContainer.innerHTML += `<option value="${service.id}">${service.title} (${service.price})</option>`;
             });
         }
@@ -477,7 +515,7 @@
             document.getElementById('zamowienie').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // PANEL LOGOWANIA I OBSŁUGI ADMINA
+        // PANEL ADMINA
         function askAdmin() {
             let password = prompt("Podaj hasło administratora:");
             if (password === "admin123") {
@@ -492,10 +530,15 @@
         function renderAdminPanel() {
             const container = document.getElementById('admin-editor-container');
             container.innerHTML = '';
+            
+            // Render pól pakietów
             servicesData.forEach((service, index) => {
                 container.innerHTML += `
                     <div class="admin-box">
-                        <h4>Pakiet ${index + 1}: ${service.title}</h4>
+                        <h4>
+                            <span>Pakiet ${index + 1}</span>
+                            <button class="btn btn-danger" onclick="deletePackage(${index})">Usuń</button>
+                        </h4>
                         <label>Nazwa pakietu:</label>
                         <input type="text" id="edit-title-${index}" value="${service.title}">
                         
@@ -513,27 +556,82 @@
                     </div>
                 `;
             });
+
+            // Wpisanie obecnej wartości stopki do pola tekstowego
+            document.getElementById('edit-footer-text').value = footerData.text;
         }
 
-        function saveAdminChanges() {
-            servicesData.forEach((service, index) => {
-                service.title = document.getElementById(`edit-title-${index}`).value;
-                service.icon = document.getElementById(`edit-icon-${index}`).value;
-                service.price = document.getElementById(`edit-price-${index}`).value;
-                service.desc = document.getElementById(`edit-desc-${index}`).value;
-                service.features = document.getElementById(`edit-feat-${index}`).value;
+        // DODAWANIE NOWEGO PAKIETU
+        function addNewPackage() {
+            // Najpierw zapisujemy to, co użytkownik już zdążył wpisać w polach tekstowych, żeby tego nie zgubić
+            syncDataFromInputs();
+            
+            // Wpychamy czysty, szablonowy obiekt do tablicy
+            let newId = "pakiet-" + Date.now();
+            servicesData.push({
+                id: newId,
+                icon: "✨",
+                title: "Nowy Pakiet",
+                desc: "Opis nowej usługi",
+                price: "od 1500 zł",
+                features: "Cecha 1, Cecha 2, Cecha 3"
             });
+            
+            // Odświeżamy panel, by pojawił się nowy formularz na dole
+            renderAdminPanel();
+        }
+
+        // USUWANIE PAKIETU
+        function deletePackage(index) {
+            if(confirm("Czy na pewno chcesz usunąć ten pakiet z oferty?")) {
+                syncDataFromInputs();
+                servicesData.splice(index, 1);
+                renderAdminPanel();
+            }
+        }
+
+        // Synchronizacja pól tekstowych z tablicą w pamięci JS
+        function syncDataFromInputs() {
+            servicesData.forEach((service, index) => {
+                const titleEl = document.getElementById(`edit-title-${index}`);
+                if (titleEl) service.title = titleEl.value;
+                
+                const iconEl = document.getElementById(`edit-icon-${index}`);
+                if (iconEl) service.icon = iconEl.value;
+                
+                const priceEl = document.getElementById(`edit-price-${index}`);
+                if (priceEl) service.price = priceEl.value;
+                
+                const descEl = document.getElementById(`edit-desc-${index}`);
+                if (descEl) service.desc = descEl.value;
+                
+                const featEl = document.getElementById(`edit-feat-${index}`);
+                if (featEl) service.features = featEl.value;
+            });
+            
+            const footerEl = document.getElementById('edit-footer-text');
+            if (footerEl) footerData.text = footerEl.value;
+        }
+
+        // ZAPISYWANIE ZMIAN W PODGLĄDZIE
+        function saveAdminChanges() {
+            syncDataFromInputs();
             renderPage();
             alert("Zastosowano zmiany w widoku strony!");
         }
 
+        // EKSPORT DO GITHUB (POBIERANIE PLIKU)
         function exportNewHTML() {
             saveAdminChanges();
             let currentHTML = document.documentElement.outerHTML;
             
-            // Formatowanie i podmiana bazy danych w kodzie źródłowym przed pobraniem
+            // Podmiana bazy stopki w tekście kodu
+            let footerString = `let footerData = ${JSON.stringify(footerData, null, 12)};`;
+            let updatedHTML = currentHTML.replace(/let footerData = \{\s*[\s\S]*?\};/, footerString);
+            
+            // Podmiana bazy pakietów w tekście kodu
             let dataString = `let servicesData = ${JSON.stringify(servicesData, null, 12)};`;
-            let updatedHTML = currentHTML.replace(/let servicesData = \[\s*[\s\S]*?\];/, dataString);
+            updatedHTML = updatedHTML.replace(/let servicesData = \[\s*[\s\S]*?\];/, dataString);
             
             let blob = new Blob(["<!DOCTYPE html>\n" + updatedHTML], { type: "text/html" });
             let a = document.createElement("a");
@@ -542,7 +640,7 @@
             a.click();
         }
 
-        // Inicjalizacja strony
+        // Start aplikacji
         renderPage();
     </script>
 </body>
