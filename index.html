@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fox Webpages - Tanie strony internetowe</title>
+    <style>
+        /* Paleta barw: Pomarańczowy (#FF6B00, #FF8533) i Biały/Jasny */
+        :root {
+            --primary: #FF6B00;
+            --primary-hover: #FF8533;
+            --bg-light: #FAFAFA;
+            --bg-white: #FFFFFF;
+            --text-dark: #222222;
+            --text-muted: #666666;
+            --border: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--bg-white);
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--bg-white) 60%, #FFF5EE 100%);
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--bg-white);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary);
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* Katalog Kategorii */
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .card-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .card-features {
+            list-style: none;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .card-features li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Formularz Zamówienia */
+        .order-section {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: var(--bg-light);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--bg-white);
+        }
+
+        footer {
+            background-color: var(--text-dark);
+            color: var(--bg-white);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+
+        footer span {
+            color: var(--primary);
+        }
+
+        /* Responsywność */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">🦊 Fox <span>Webpages</span></div>
+            <nav>
+                <a href="#katalog">Katalog</a>
+                <a href="#zamowienie">Zamów stronę</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Nowoczesne strony internetowe od <span>Fox Webpages</span></h1>
+        <p>Wybierz interesującą Cię kategorię, prześlij nam swoje wymagania za pomocą prostego formularza i zyskaj unikalną wizytówkę w sieci.</p>
+        <a href="#katalog" class="btn">Zobacz Katalog</a>
+    </section>
+
+    <div class="container">
+        
+        <section id="katalog">
+            <h2 class="section-title">Katalog tworzenia stron</h2>
+            <div class="catalog">
+                
+                <div class="card">
+                    <div>
+                        <div class="card-icon">📄</div>
+                        <h3 class="card-title">Strona Wizytówkowa</h3>
+                        <p style="color: var(--text-muted);">Prosta i elegancka strona dla firm jednoosobowych i lokalnych.</p>
+                        <div class="card-price">od 999 zł</div>
+                    </div>
+                    <div>
+                        <ul class="card-features">
+                            <li>Strona typu One-Page</li>
+                            <li>Formularz kontaktowy</li>
+                            <li>Integracja z Mapami Google</li>
+                            <li>Pełna responsywność (Mobile)</li>
+                        </ul>
+                        <button class="btn" style="width: 100%;" onclick="selectCategory('wizytowka')">Wybierz</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-icon">💼</div>
+                        <h3 class="card-title">Strona Firmowa (Korporacyjna)</h3>
+                        <p style="color: var(--text-muted);">Rozbudowana witryna z wieloma podstronami dla wymagających przedsiębiorstw.</p>
+                        <div class="card-price">od 2499 zł</div>
+                    </div>
+                    <div>
+                        <ul class="card-features">
+                            <li>Do 10 podstron ofertowych</li>
+                            <li>Panel CMS do edycji treści</li>
+                            <li>Blog / Aktualności</li>
+                            <li>Optymalizacja SEO na start</li>
+                        </ul>
+                        <button class="btn" style="width: 100%;" onclick="selectCategory('firmowa')">Wybierz</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="card-icon">🛒</div>
+                        <h3 class="card-title">Sklep Internetowy (E-commerce)</h3>
+                        <p style="color: var(--text-muted);">Kompletna platforma sprzedażowa gotowa do podbicia rynku e-handlu.</p>
+                        <div class="card-price">od 4499 zł</div>
+                    </div>
+                    <div>
+                        <ul class="card-features">
+                            <li>Nielimitowana liczba produktów</li>
+                            <li>Płatności online (Szybkie przelewy)</li>
+                            <li>Zarządzanie magazynem i dostawami</li>
+                            <li>Szkolenie z obsługi systemu</li>
+                        </ul>
+                        <button class="btn" style="width: 100%;" onclick="selectCategory('sklep')">Wybierz</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="zamowienie">
+            <h2 class="section-title">Szybkie zamawianie</h2>
+            <div class="order-section">
+                <form action="https://formspree.io/f/TWÓJ_IDENTYFIKATOR" method="POST" id="orderForm">
+                    
+                    <div class="form-group">
+                        <label for="category">Wybrana kategoria strony:</label>
+                        <select id="category" name="kategoria" required>
+                            <option value="" disabled selected>-- Wybierz z katalogu --</option>
+                            <option value="wizytowka">Strona Wizytówkowa (od 999 zł)</option>
+                            <option value="firmowa">Strona Firmowa (od 2499 zł)</option>
+                            <option value="sklep">Sklep Internetowy (od 4499 zł)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Imię i nazwisko / Nazwa firmy:</label>
+                        <input type="text" id="name" name="klient" placeholder="np. Jan Kowalski" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Adres e-mail:</label>
+                        <input type="email" id="email" name="email" placeholder="np. kontakt@twojadomena.pl" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Krótki opis Twoich wymagań:</label>
+                        <textarea id="notes" name="opis" rows="4" placeholder="Opisz krótko czym zajmuje się Twoja firma i jakich funkcji potrzebujesz..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; font-size: 18px;">Wyślij zapytanie ofertowe</button>
+                </form>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 <span>Fox Webpages</span>. Wszelkie prawa zastrzeżone. Projekt opublikowany na GitHub Pages.</p>
+    </footer>
+
+    <script>
+        // Funkcja automatycznie wybierająca pakiet po kliknięciu "Wybierz" w katalogu
+        function selectCategory(categoryValue) {
+            const selectElement = document.getElementById('category');
+            selectElement.value = categoryValue;
+            
+            // Płynne przewinięcie do formularza
+            document.getElementById('zamowienie').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
